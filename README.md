@@ -40,8 +40,8 @@ Convert the following use cases into API endpoints:
 ### Extra Feature (Optional)
 
 - **Job Moderation**: using artificial intelligence, we need to moderate the job content before allowing it to be published, to check for potential harmful content.
-Every time a user requests a job publication (`PUT /job/:job_id/publish`), the API should reply with success to the user, but the job should not be immediately published. It should be queued using AWS SQS, feeding the job to a Lambda component.
-Using OpenAI's free moderation API, create a Lambda component that will evaluate the job title and description, and test for hamrful content. If the content passes the evaluation, the component should change the job status to `published`, otherwise change to `rejected` and add the response from OpenAI API to the `notes` column.
+  Every time a user requests a job publication (`PUT /job/:job_id/publish`), the API should reply with success to the user, but the job should not be immediately published. It should be queued using AWS SQS, feeding the job to a Lambda component.
+  Using OpenAI's free moderation API, create a Lambda component that will evaluate the job title and description, and test for hamrful content. If the content passes the evaluation, the component should change the job status to `published`, otherwise change to `rejected` and add the response from OpenAI API to the `notes` column.
 
 ### Bonus Questions
 
@@ -79,30 +79,32 @@ That said, if you do choose to utilize AI tools, we would appreciate it if you c
 
 Remember, this assessment is not just about getting to the solution, but also about demonstrating your skills, creativity, and how you navigate and integrate the use of emerging technologies in your work.
 
+---
 
--------------------------------------------------------------------
 Resumo:
 O projeto consiste na construção de uma API, conforme solicitado, utilizando o framework Serverless para a criação das respectivas rotas como funções Lambda na AWS.
 
 Instalação da aplicação:
- Observação: a aplicação considera que o banco de dados já tenha sido criado anteriormente e que as credenciais da conta AWS já estejam configuradas no AWS CLI.
+Observação: a aplicação considera que o banco de dados já tenha sido criado anteriormente e que as credenciais da conta AWS já estejam configuradas no AWS CLI.
 
 1- Instale as dependências do projeto com:
-  $npm install
+$npm install
 
 2- Caso não tenha instalado, instale o Serverless Framework: $ npm install -g serverless
 
 3- Configure as variáveis no arquivo .env de acordo com o que deseja para a execução da aplicação, definindo o ambiente, passando as informações do banco em questão, etc.
 
 4- Faça o deploy da aplicação:
-  $ serverless deploy
+$ serverless deploy
 
 Considerações:
-  Realmente foi um projeto bem desafiador, pois não tinha conta na AWS e reforçando o fato de que eu nunca tinha construído nenhuma aplicação com infraestrutura Serverless. Gostaria de agradecer a oportunidade e pontuar que tive alguns problemas ao final da primeira semana que fizeram com que eu perdesse meu projeto inicial, no entanto, acredito que consegui desenvolver um projeto funcional.
-  Uma observação é que não tinha pensado em programar utilizando uma ferramenta de IA como chatGPT ou como foi no meu caso o Github Copilot, e devo confessar que me auxiliou muito de forma que agilizou tanto pesquisas de documentação como na hora de pensar se as rotas faziam o que elas deveriam fazer. Fiquei impressionado em como essas ferramentas auxiliam na programação e acredito que utilizarei sempre daqui pra frente. Melhorias: Acredito que o projeto hoje tem muitos pontos que gostaria de melhorar: 1- Estruturar o projeto melhor utilizando routers para separar as requisições referentes a Job e referentes a Companies.
+Realmente foi um projeto bem desafiador, pois não tinha conta na AWS e reforçando o fato de que eu nunca tinha construído nenhuma aplicação com infraestrutura Serverless. Gostaria de agradecer a oportunidade e pontuar que tive alguns problemas ao final da primeira semana que fizeram com que eu perdesse meu projeto inicial, no entanto, acredito que consegui desenvolver um projeto funcional.
+Uma observação é que não tinha pensado em programar utilizando uma ferramenta de IA como chatGPT ou como foi no meu caso o Github Copilot, e devo confessar que me auxiliou muito de forma que agilizou tanto pesquisas de documentação como na hora de pensar se as rotas faziam o que elas deveriam fazer. Fiquei impressionado em como essas ferramentas auxiliam na programação e acredito que utilizarei sempre daqui pra frente. Melhorias: Acredito que o projeto hoje tem muitos pontos que gostaria de melhorar: 1- Estruturar o projeto melhor utilizando routers para separar as requisições referentes a Job e referentes a Companies.
 
 2- Utilizar uma função para receber as requisições a partir de um SQS e assim redirecioná-los para as devidas rotas em vez de usar o API Gateway diretamente.
 
 3- Utilizar Jest e criar os testes unitários para cada uma das rotas.
 
-4- Adicionar as features opcionais comentadas.
+4- Melhorar a documentação da API
+
+5- Adicionar as features opcionais comentadas.
