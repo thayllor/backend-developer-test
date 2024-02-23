@@ -78,3 +78,31 @@ In today's evolving tech landscape, AI tools such as ChatGPT and GitHub Copilot 
 That said, if you do choose to utilize AI tools, we would appreciate it if you could share details about this in your submission. Include the prompts you used, how you interacted with the AI, and how it influenced your development process. This will give us additional insight into your approach to leveraging such technologies effectively.
 
 Remember, this assessment is not just about getting to the solution, but also about demonstrating your skills, creativity, and how you navigate and integrate the use of emerging technologies in your work.
+
+
+-------------------------------------------------------------------
+Resumo:
+O projeto consiste na construção de uma API, conforme solicitado, utilizando o framework Serverless para a criação das respectivas rotas como funções Lambda na AWS.
+
+Instalação da aplicação:
+ Observação: a aplicação considera que o banco de dados já tenha sido criado anteriormente e que as credenciais da conta AWS já estejam configuradas no AWS CLI.
+
+1- Instale as dependências do projeto com:
+  $npm install
+
+2- Caso não tenha instalado, instale o Serverless Framework: $ npm install -g serverless
+
+3- Configure as variáveis no arquivo .env de acordo com o que deseja para a execução da aplicação, definindo o ambiente, passando as informações do banco em questão, etc.
+
+4- Faça o deploy da aplicação:
+  $ serverless deploy
+
+Considerações:
+  Realmente foi um projeto bem desafiador, pois não tinha conta na AWS e reforçando o fato de que eu nunca tinha construído nenhuma aplicação com infraestrutura Serverless. Gostaria de agradecer a oportunidade e pontuar que tive alguns problemas ao final da primeira semana que fizeram com que eu perdesse meu projeto inicial, no entanto, acredito que consegui desenvolver um projeto funcional.
+  Uma observação é que não tinha pensado em programar utilizando uma ferramenta de IA como chatGPT ou como foi no meu caso o Github Copilot, e devo confessar que me auxiliou muito de forma que agilizou tanto pesquisas de documentação como na hora de pensar se as rotas faziam o que elas deveriam fazer. Fiquei impressionado em como essas ferramentas auxiliam na programação e acredito que utilizarei sempre daqui pra frente. Melhorias: Acredito que o projeto hoje tem muitos pontos que gostaria de melhorar: 1- Estruturar o projeto melhor utilizando routers para separar as requisições referentes a Job e referentes a Companies.
+
+2- Utilizar uma função para receber as requisições a partir de um SQS e assim redirecioná-los para as devidas rotas em vez de usar o API Gateway diretamente.
+
+3- Utilizar Jest e criar os testes unitários para cada uma das rotas.
+
+4- Adicionar as features opcionais comentadas.

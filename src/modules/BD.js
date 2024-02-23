@@ -1,15 +1,30 @@
 const { Pool } = require('pg');
+const fs = require('fs');
 require('dotenv').config();
 
 class ApiDatabaseConnector {
   constructor() {
-    this.pool = new Pool({
-      host: process.env.DB_HOST,
-      port: process.env.DB_PORT,
-      user: process.env.DB_USER,
-      password: process.env.DB_PASSWORD,
-      database: process.env.DB_NAME,
-    });
+    if(process.env.ENVIROMENT ==="AWS"){
+      this.pool = new Pool({
+        host: process.env.AWS_DB_HOST,
+        port: process.env.AWS_DB_PORT,
+        user: process.env.AWS_DB_USER,
+        password: process.env.AWS_DB_PASSWORD,
+        database: process.env.AWS_DB_NAME,
+        ssl: {
+          rejectUnauthorized: true,
+          ca: fs.readFileSync('./src/certificate/us-east-2-bundle.pem').toString(),
+        }
+      });
+    }else{
+      this.pool = new Pool({
+        host: process.env.LOCAL_DB_HOST,
+        port: process.env.LOCAL_DB_PORT,
+        user: process.env.LOCAL_DB_USER,
+        password: process.env.LOCAL_DB_PASSWORD,
+        database: process.env.LOCAL_DB_NAME,
+      });
+    }
   }
 
   async getCompanies() {
@@ -40,10 +55,22 @@ class ApiDatabaseConnector {
     }
   }
 
+  async getJobsByStatus(status) {
+    const client = await this.pool.connect();
+    try {
+      const { rows } = await client.query('SELECT id, title, description, company_id as companyName, created_at as createdAt FROM jobs WHERE status = $1', [status]);
+      return rows;
+    } catch (error) {
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
   async createJobDraft(jobDetails) {
     const client = await this.pool.connect();
     try {
-      const { rows } = await client.query('INSERT INTO jobs (title, description, company_id) VALUES ($1, $2, $3) RETURNING *', [jobDetails.title, jobDetails.description, jobDetails.company_id]);
+      const { rows } = await client.query('INSERT INTO jobs (title, description, company_id, location, notes) VALUES ($1, $2, $3, $4, $5) RETURNING *', [jobDetails.title, jobDetails.description, jobDetails.company_id, jobDetails.location, jobDetails.notes]);
       return rows[0];
     } catch (error) {
       throw error;
@@ -71,16 +98,39 @@ class ApiDatabaseConnector {
   async editJobDraft(job_id, jobDetails) {
     const client = await this.pool.connect();
     try {
-      const { rows } = await client.query('UPDATE jobs SET title = $1, location = $2, description = $3 WHERE id = $4 RETURNING *', [jobDetails.title, jobDetails.location, jobDetails.description, job_id]);
-      if (rows.length > 0) {
-        return rows[0];
-      } else {
-        return null;
-      }
-    } catch (error) {
-      throw error;
-    } finally {
-      client.release();
+        // Start building the query
+        let query = 'UPDATE jobs SET ';
+        let params = [];
+        let index = 1;
+
+        // Add each property in jobDetails to the query
+        for (let prop in jobDetails) {
+          if (jobDetails.hasOwnProperty(prop)) {
+            query += `${prop} = $${index}, `;
+            params.push(jobDetails[prop]);
+            index++;
+            console.log(prop)
+          }
+        }
+
+        // Remove the last comma and space from the query
+        query = query.slice(0, -2);
+
+        // Add the WHERE clause to the query
+        query += ` WHERE id = $${index} RETURNING *`;
+        params.push(job_id);
+
+        const { rows } = await client.query(query, params);
+        if (rows.length > 0) {
+          return rows[0];
+        } else {
+          return null;
+        }
+      } catch (error) {
+        throw error;
+      } finally {
+        client.release();
+
     }
   }
 
